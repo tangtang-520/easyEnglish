@@ -27,7 +27,7 @@ easyEnglish 是一个跨平台英语学习应用程序，支持 Web 应用、移
 
 ```
 easyEnglish/
-├── my-app/                 # 前端应用
+├── app/                 # 前端应用
 │   ├── app/                # 应用路由和页面
 │   ├── components/         # 可复用组件
 │   ├── api/                # API 调用
@@ -69,7 +69,7 @@ easyEnglish/
 1. 进入前端目录:
 
    ```bash
-   cd my-app
+   cd app
    ```
 2. 安装依赖:
 

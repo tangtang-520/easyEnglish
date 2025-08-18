@@ -104,3 +104,18 @@ service/src/upload/*
 *.backup
 *.swp
 *~.nib
+
+# Web 项目特定文件
+web/.nuxt/
+web/.output/
+web/node_modules/
+web/.nitro/
+web/.cache/
+web/dist/
+web/.env
+web/.env.*
+web/sw.*
+web/public/_nuxt/
+web/.vite-ssg-temp/
+web/.vercel/
+web/components.d.ts
