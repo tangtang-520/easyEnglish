@@ -1,0 +1,36 @@
+{
+  "name": "easyenglish-service",
+  "version": "1.0.0",
+  "description": "EasyEnglish backend service with Koa and MySQL",
+  "main": "src/app.js",
+  "author": "xiaotang",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@koa/cors": "^5.0.0",
+    "axios": "^1.11.0",
+    "bcryptjs": "^3.0.2",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.1",
+    "joi": "^18.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "koa-body": "^6.0.1",
+    "koa-jwt": "^4.0.4",
+    "koa-router": "^14.0.0",
+    "koa-static": "^5.0.0",
+    "mysql2": "^3.14.3",
+    "sequelize": "^6.37.7",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
