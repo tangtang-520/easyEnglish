@@ -3,7 +3,7 @@ const { logger } = require("../utils/logger");
 /**
  * 全局错误处理中间件
  */
-async function errorHandler(ctx, next, message) {
+async function errorHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
@@ -15,13 +15,13 @@ async function errorHandler(ctx, next, message) {
     ctx.status = err.status || 500;
 
     if (err.status === 401) {
-      message = "无效令牌";
+       ctx.body.message = "无效令牌";
     }
 
     // 设置响应体
     ctx.body = {
       code: 1,
-      message: message || err.message || "Internal Server Error",
+      message:  err.message || "Internal Server Error",
       ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
     };
   }

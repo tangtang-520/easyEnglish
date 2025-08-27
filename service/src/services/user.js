@@ -1,11 +1,11 @@
 const User = require("../models/user.js");
 const { encryptPassword, comparePassword } = require("../utils/password.js");
 const { creatToken } = require("../utils/jwt.js");
+const { Op } = require("sequelize");
 const {
   registerSchema,
   loginSchema,
 } = require("../validators/auth.validator.js");
-// const errorHandler = require("../middleware/errorHandler.js");
 
 // 创建用户
 const creatUser = async (ctx) => {
@@ -28,7 +28,7 @@ const creatUser = async (ctx) => {
 
     // 密码加密
     const passwordHash = await encryptPassword(password);
-    
+
     // 创建用户
     const newUser = await User.create({
       username,
@@ -75,14 +75,23 @@ const login = async (ctx) => {
     }
 
     // 查找用户是否存在
-    const user = await User.findOne({ where: { username: username } });
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ username: username }, { email: username }],
+      },
+    });
+    // const user = await User.findOne({ where: { username: username } });
     if (!user) {
+      console.log("user===>", user);
+
       ctx.throw("账号或密码错误");
     }
 
     // 密码校验
     const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
+      console.log("isMatch===>", isMatch);
+
       ctx.throw("账号或密码错误");
     }
 
@@ -108,7 +117,7 @@ const login = async (ctx) => {
       },
     };
   } catch (error) {
-    ctx.throw(error.message);
+    ctx.throw(200, error.message);
   }
 };
 
