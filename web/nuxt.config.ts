@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/normalize.css', '~/assets/css/tailwind.css'],
   vite: {
     plugins: [
       tailwindcss(),
@@ -11,17 +11,24 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxt/content',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxt/scripts',
     '@nuxt/test-utils',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
+    '@formkit/auto-animate/nuxt'
   ],
-   shadcn: {
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
     prefix: '',
-    componentDir: './components/ui'
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './app/components/ui'
   },
 })
