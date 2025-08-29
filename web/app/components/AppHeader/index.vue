@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import LoginAccount from "@/components/LoginAccount";
+// import LoginAccount from "@/components/LoginAccount/index.vue";
+import NavMenu from "@/components/NavMenu/index.vue";
 
 const dialogOpen = ref(false);
 </script>
@@ -41,6 +42,6 @@ const dialogOpen = ref(false);
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    <LoginAccount v-model:open="dialogOpen" />
+    <!-- <LoginAccount v-model:open="dialogOpen" /> -->
   </div>
 </template>

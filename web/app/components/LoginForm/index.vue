@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type { LoginRequest } from "@/api/types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-// import { h } from "vue";
 import * as z from "zod";
+import { loginUserApi } from "@/api/user";
+import { useMutation } from "@tanstack/vue-query";
 
 import {
   FormControl,
@@ -19,8 +20,14 @@ import {
 
 const formSchema = toTypedSchema(
   z.object({
-    username: z.string({message:"请填写账户"}).min(2, {message:'账户长度最小2位字符'}).max(50, {message:"账户长度最大50位字符"}),
-    password: z.string({message:"请输入密码"}).min(6, {message:'密码长度最小6位字符'}).max(50, {message:"密码长度最大50位字符"}),
+    username: z
+      .string({ message: "请填写账户" })
+      .min(2, { message: "账户长度最小2位字符" })
+      .max(50, { message: "账户长度最大50位字符" }),
+    password: z
+      .string({ message: "请输入密码" })
+      .min(6, { message: "密码长度最小6位字符" })
+      .max(50, { message: "密码长度最大50位字符" }),
   })
 );
 
@@ -28,16 +35,18 @@ const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
+const {
+  isPending,
+  mutate: loginMutation,
+  data,
+} = useMutation({
+  mutationKey: ["userlogin"],
+  mutationFn: (values: LoginRequest) => loginUserApi(values),
+});
+
 const onSubmit = handleSubmit((values) => {
-  //   toast({
-  //     title: "You submitted the following values:",
-  //     description: h(
-  //       "pre",
-  //       { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-  //       h("code", { class: "text-white" }, JSON.stringify(values, null, 2))
-  //     ),
-  //   });
-  console.log(values);
+  loginMutation(values);
+  console.log(data, isPending.value);
 });
 </script>
 
@@ -59,7 +68,11 @@ const onSubmit = handleSubmit((values) => {
           <FormItem v-auto-animate>
             <FormLabel>账号</FormLabel>
             <FormControl>
-              <Input type="text" placeholder="请输入账号或邮箱" v-bind="componentField" />
+              <Input
+                type="text"
+                placeholder="请输入账号或邮箱"
+                v-bind="componentField"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
