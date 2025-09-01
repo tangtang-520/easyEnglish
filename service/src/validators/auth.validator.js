@@ -40,7 +40,13 @@ const registerSchema = Joi.object({
   }),
 });
 
+// 邮箱验证
+const emailSchema = Joi.string().email().messages({
+  "string.email": "请输入有效的邮箱地址",
+});
+
 module.exports = {
   loginSchema,
   registerSchema,
+  emailSchema
 };

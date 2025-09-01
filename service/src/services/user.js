@@ -5,21 +5,33 @@ const { Op } = require("sequelize");
 const {
   registerSchema,
   loginSchema,
+  emailSchema
 } = require("../validators/auth.validator.js");
 
 
 // 创建用户
 const creatUser = async (ctx) => {
   try {
-    const { username, password } = ctx.request.body;
+    const { username, password, email } = ctx.request.body;
     if (!username || !password) {
       ctx.throw("用户名和密码不能为空");
     }
+
     // 账号密码校验
     const { error } = registerSchema.validate({ username, password });
     if (error) {
       ctx.throw(error.message);
     }
+
+    if (email) {
+      // 邮箱校验
+      const { error } = emailSchema.validate(email);
+      if (error) {
+        console.log("error===>", error);
+        ctx.throw(error.message);
+      }
+    }
+
 
     // 查找用户是否存在
     const user = await User.findOne({ where: { username: username } });
@@ -34,7 +46,7 @@ const creatUser = async (ctx) => {
     const newUser = await User.create({
       username,
       password: passwordHash,
-      email: null,
+      email: email || null,
       created_at: new Date(),
       updated_at: new Date(),
     });
@@ -58,7 +70,7 @@ const creatUser = async (ctx) => {
       },
     };
   } catch (error) {
-    ctx.throw(error);
+    ctx.throw(200, error.message);
   }
 };
 
