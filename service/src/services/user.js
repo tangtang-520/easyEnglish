@@ -7,6 +7,7 @@ const {
   loginSchema,
 } = require("../validators/auth.validator.js");
 
+
 // 创建用户
 const creatUser = async (ctx) => {
   try {
@@ -82,8 +83,6 @@ const login = async (ctx) => {
     });
     // const user = await User.findOne({ where: { username: username } });
     if (!user) {
-      console.log("user===>", user);
-
       ctx.throw("账号或密码错误");
     }
 

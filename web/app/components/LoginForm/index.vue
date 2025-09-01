@@ -9,7 +9,7 @@ import { useForm } from "vee-validate";
 import * as z from "zod";
 import { loginUserApi } from "@/api/user";
 import { useMutation } from "@tanstack/vue-query";
-
+import { Loader2 } from "lucide-vue-next"
 import {
   FormControl,
   FormField,
@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 
 const formSchema = toTypedSchema(
   z.object({
@@ -108,7 +109,10 @@ const onSubmit = handleSubmit((values) => {
           </FormItem>
         </FormField>
       </div>
-      <Button type="submit" class="w-full"> 登录 </Button>
+      <Button type="submit" :disabled="isPending" class="w-full">
+        <Loader2 v-if="isPending" class="animate-spin" />
+        登录
+      </Button>
       <div
         class="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"
       >
@@ -126,6 +130,10 @@ const onSubmit = handleSubmit((values) => {
         GitHub 登录
       </Button>
     </div>
+
+    
+
+
     <div class="text-center text-sm">
       没有账号？
       <a href="#" class="underline underline-offset-4"> 注册 </a>

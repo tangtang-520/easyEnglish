@@ -15,7 +15,7 @@ import {
 // import LoginAccount from "@/components/LoginAccount/index.vue";
 import NavMenu from "@/components/NavMenu/index.vue";
 
-const dialogOpen = ref(false);
+// const dialogOpen = ref(false);
 </script>
 <template>
   <div
