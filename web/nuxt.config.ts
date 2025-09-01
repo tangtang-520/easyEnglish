@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  
+
   modules: [
     "@nuxt/eslint",
     "@nuxt/fonts",
@@ -23,6 +23,8 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "shadcn-nuxt",
     "@formkit/auto-animate/nuxt",
+    "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
   ],
   shadcn: {
     /**

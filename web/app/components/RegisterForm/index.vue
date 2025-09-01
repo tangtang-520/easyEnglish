@@ -5,9 +5,10 @@ import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import * as z from "zod";
-import { loginUserApi } from "@/api/user";
+import { registerUserApi } from "@/api/user";
 import { useMutation } from "@tanstack/vue-query";
 import { Loader2, Eye, EyeOff } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 const emit = defineEmits(["changTab"]);
 const formSchema = toTypedSchema(
@@ -19,7 +20,8 @@ const formSchema = toTypedSchema(
     password: z
       .string({ message: "请输入密码" })
       .min(8, { message: "密码长度最小8位字符" })
-      .max(16, { message: "密码长度最大16位字符" }),
+      .max(16, { message: "密码长度最大16位字符" })
+      .regex(/^[A-Za-z\d]+$/, { message: "密码只能包含字母和数字" }),
     email: z.email({ message: "请输入正确邮箱" }).optional().or(z.literal("")),
   })
 );
@@ -33,18 +35,17 @@ const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
-const {
-  isPending,
-  mutate: loginMutation,
-  data,
-} = useMutation({
-  mutationKey: ["userlogin"],
-  mutationFn: (values: LoginRequest) => loginUserApi(values),
+const { isPending, mutate: registerMutation } = useMutation({
+  mutationKey: ["userRegister"],
+  mutationFn: (values: LoginRequest) => registerUserApi(values),
 });
 
 const onSubmit = handleSubmit((values) => {
-  loginMutation(values);
-  console.log(data, isPending.value);
+  registerMutation(values, {
+    onSuccess: () => {
+      toast.success("注册成功");
+    },
+  });
 });
 
 const toLogin = () => {
@@ -103,11 +104,11 @@ const toLogin = () => {
                   class="absolute right-[0px] top-1/2 transform -translate-y-1/2 flex items-center justify-center px-2"
                   @click="changPass"
                 >
-                  <EyeOff
+                  <Eye
                     v-if="passType === 'password'"
                     class="size-6 text-muted-foreground"
                   />
-                  <Eye v-else class="size-6 text-muted-foreground" />
+                  <EyeOff v-else class="size-6 text-muted-foreground" />
                 </span>
               </FormControl>
             </div>

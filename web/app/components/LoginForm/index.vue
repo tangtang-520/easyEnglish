@@ -1,23 +1,13 @@
 <script setup lang="ts">
 import type { LoginRequest } from "@/api/types";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import * as z from "zod";
 import { loginUserApi } from "@/api/user";
 import { useMutation } from "@tanstack/vue-query";
-import { Loader2 } from "lucide-vue-next"
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
+import { Loader2 } from "lucide-vue-next";
 
 const formSchema = toTypedSchema(
   z.object({
@@ -36,18 +26,23 @@ const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
-const {
-  isPending,
-  mutate: loginMutation,
-  data,
-} = useMutation({
+const { isPending, mutate: loginMutation } = useMutation({
   mutationKey: ["userlogin"],
   mutationFn: (values: LoginRequest) => loginUserApi(values),
 });
+const userInfoStore = useUserInfoStore();
+const tokenCookie = useCookie("authToken");
 
 const onSubmit = handleSubmit((values) => {
-  loginMutation(values);
-  console.log(data, isPending.value);
+  loginMutation(values, {
+    onSuccess: (data) => {
+      console.log(data);
+      tokenCookie.value = data.data.token;
+      userInfoStore.setUserInfo(data.data.userInfo);
+      userInfoStore.setToken(data.data.token);
+      navigateTo("/");
+    },
+  });
 });
 </script>
 
@@ -130,9 +125,6 @@ const onSubmit = handleSubmit((values) => {
         GitHub 登录
       </Button>
     </div>
-
-    
-
 
     <div class="text-center text-sm">
       没有账号？

@@ -1,21 +1,5 @@
 <script lang="ts" setup>
-import {
-  Avatar,
-  AvatarFallback,
-  //  AvatarImage
-} from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-// import LoginAccount from "@/components/LoginAccount/index.vue";
-import NavMenu from "@/components/NavMenu/index.vue";
-
-// const dialogOpen = ref(false);
+const { hasToken } = useUserInfoStore();
 </script>
 <template>
   <div
@@ -28,7 +12,7 @@ import NavMenu from "@/components/NavMenu/index.vue";
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <!-- <AvatarImage src="https://github.com/unovue.png" alt="@unovue" /> -->
+            <AvatarImage src="https://github.com/unovue.png" alt="@unovue" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -37,7 +21,8 @@ import NavMenu from "@/components/NavMenu/index.vue";
           <DropdownMenuLabel>账户信息</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <NuxtLink to="/login">请登录</NuxtLink>
+            <NuxtLink v-if="!hasToken" to="/login">请登录</NuxtLink>
+            <NuxtLink v-else to="/user">个人中心</NuxtLink>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

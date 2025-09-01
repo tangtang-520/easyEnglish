@@ -14,7 +14,8 @@ export function requert(): AxiosInstance {
 
   requert.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const token = localStorage.getItem("token");
+      const userData = JSON.parse(localStorage.getItem("userInfo") || "{}");
+      const token = userData?.authToken || '';
       if (token) {
         config.headers.set("Authorization", `Bearer ${token}`);
       }
@@ -25,9 +26,7 @@ export function requert(): AxiosInstance {
 
   requert.interceptors.response.use(
     (response) => {
-      console.log(response.data);
       const { code, message, data } = response.data;
-      
       if(code !== 0 ) {
         console.log(message);
         toast.error(message || '请求失败');
