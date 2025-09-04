@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { hasToken } = useUserInfoStore();
+const { hasToken, clearUserInfo } = useUserInfoStore();
 </script>
 <template>
   <div
@@ -16,7 +16,6 @@ const { hasToken } = useUserInfoStore();
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-
         <DropdownMenuContent>
           <DropdownMenuLabel>账户信息</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -24,9 +23,12 @@ const { hasToken } = useUserInfoStore();
             <NuxtLink v-if="!hasToken" to="/login">请登录</NuxtLink>
             <NuxtLink v-else to="/user">个人中心</NuxtLink>
           </DropdownMenuItem>
+           <DropdownMenuItem>
+            <div @click="clearUserInfo">退出登录</div>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    <!-- <LoginAccount v-model:open="dialogOpen" /> -->
+    
   </div>
 </template>

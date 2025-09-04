@@ -1,17 +1,13 @@
 <template>
-  <div class="w-full h-full">
+  <div class="min-h-screen flex flex-col">
     <AppHeader />
-    <ScrollArea class="flex-1">
+    <div class="flex-1">
       <slot />
-    </ScrollArea>
+    </div>
     <AppFooter />
   </div>
 </template>
 
-<script setup lang="ts">
-import AppHeader from "~/components/AppHeader/index.vue";
-import AppFooter from "~/components/AppFooter/index.vue";
-import { ScrollArea } from "@/components/ui/scroll-area";
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

@@ -15,7 +15,7 @@
         <!-- <NavigationMenuTrigger>Item One</NavigationMenuTrigger> -->
       </NavigationMenuItem>
       <NavigationMenuItem>
-        <NuxtLink v-slot="{ isActive, href, navigate }" to="/user" custom>
+        <NuxtLink v-slot="{ isActive, href, navigate }" to="/dictionary" custom>
           <NavigationMenuLink
             :active="isActive"
             :href

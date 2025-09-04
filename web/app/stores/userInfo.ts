@@ -6,6 +6,7 @@ export const useUserInfoStore = defineStore(
   () => {
     const userInfo = ref<User | null>(null);
     const authToken = ref<string>("");
+    const tokenCookie = useCookie("authToken");
 
     const hasToken = computed(() => authToken.value !== "");
 
@@ -20,6 +21,8 @@ export const useUserInfoStore = defineStore(
     function clearUserInfo() {
       userInfo.value = null;
       authToken.value = "";
+      tokenCookie.value = "";
+      navigateTo("/login");
     }
 
     return {

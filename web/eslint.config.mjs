@@ -10,7 +10,19 @@ export default withNuxt(
       },
     },
     rules: {
+      "vue/attributes-order": "off",
       "vue/multi-word-component-names": "off",
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: 'always', 
+            normal: "never", // normal elements should always have a closing tag
+          },
+          svg: "always",
+          math: "always",
+        },
+      ],
     },
   }
 );
