@@ -26,6 +26,18 @@
           </NavigationMenuLink>
         </NuxtLink>
       </NavigationMenuItem>
+       <NavigationMenuItem>
+        <NuxtLink v-slot="{ isActive, href, navigate }" to="/translate" custom>
+          <NavigationMenuLink
+            :active="isActive"
+            :href
+            :class="navigationMenuTriggerStyle()"
+            @click="navigate"
+          >
+            翻译
+          </NavigationMenuLink>
+        </NuxtLink>
+      </NavigationMenuItem>
     </NavigationMenuList>
   </NavigationMenu>
 </template>

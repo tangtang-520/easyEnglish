@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col">
     <AppHeader />
     <div class="flex-1">
-      <slot />
+      <slot></slot>
     </div>
     <AppFooter />
   </div>

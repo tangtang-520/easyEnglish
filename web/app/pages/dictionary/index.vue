@@ -10,6 +10,7 @@ import {
   Clock,
   Target,
 } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 const query = ref("");
 const result = ref<{
@@ -36,6 +37,10 @@ const searchWord = async () => {
     return;
   }
   await refetch();
+  if(data.value?.data.wordInfo=== null){
+    toast.warning("未找到该单词");
+    return;
+  };
   result.value = data.value?.data.wordInfo || null;
 };
 
@@ -57,6 +62,7 @@ const exchangeFormat = (exchange: string) => {
 const examMap: Record<string, string> = {
   cet4: "四级",
   cet6: "六级",
+  cet8: "八级",
   ky: "考研",
   toefl: "托福",
   ielts: "雅思",
@@ -71,10 +77,10 @@ const tagFormat = (tag: string) => {
 };
 
 // 发音功能
-const playPronunciation = () => {
+const playPronunciation = (type: string) => {
   if (result.value?.sw) {
     const utterance = new SpeechSynthesisUtterance(result.value.sw);
-    utterance.lang = "en-US";
+    utterance.lang = `en-${type}`;
     speechSynthesis.speak(utterance);
   }
 };
@@ -122,14 +128,28 @@ const playPronunciation = () => {
                   <CardTitle class="text-3xl font-bold">{{
                     result.sw
                   }}</CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    @click="playPronunciation"
-                    class="h-8 w-8 p-0"
-                  >
-                    <Volume2 class="h-4 w-4" />
-                  </Button>
+                  <div class="flex items-center">
+                    <span>英</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      @click="playPronunciation('GB')"
+                      class="h-8 w-8 p-0"
+                    >
+                      <Volume2 class="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div class="flex items-center">
+                    <span>美</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      @click="playPronunciation('US')"
+                      class="h-8 w-8 p-0"
+                    >
+                      <Volume2 class="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <div class="flex gap-2">
                   <Badge v-if="result.oxford" variant="default" class="gap-1">
