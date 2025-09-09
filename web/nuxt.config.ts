@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3000/api",
     },
   },
-  css: ["~/assets/css/normalize.css", "~/assets/css/tailwind.css"],
+  css: [ "~/assets/css/tailwind.css"],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     "@formkit/auto-animate/nuxt",
     "@pinia/nuxt",
     "pinia-plugin-persistedstate/nuxt",
+    "motion-v/nuxt",
   ],
   shadcn: {
     /**

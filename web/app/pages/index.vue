@@ -4,13 +4,16 @@ import {
   Book,
   BookMarked,
   Globe,
-  Star,
   Trophy,
   Users,
   Zap,
 } from "lucide-vue-next";
 import { useUserInfoStore } from "~/stores/userInfo";
 import { useRouter } from "vue-router";
+import czImg from "~/assets/images/home/cz.png"
+import gkImg from "~/assets/images/home/gk.png"
+import ysImg from "~/assets/images/home/ys.png"
+import fourImg from "~/assets/images/home/four.png"
 
 const userInfoStore = useUserInfoStore();
 const router = useRouter();
@@ -73,39 +76,38 @@ onMounted(() => {
 const popularResources = [
   {
     id: 1,
-    title: "商务英语会话技巧",
-    type: "课程",
-    level: "中级",
-    students: 2450,
+    title: "四级英语真题",
+    type: "词汇表",
+    level: "初级",
     rating: 4.8,
-    image: "https://picsum.photos/id/24/400/225",
+    image: fourImg,
   },
   {
     id: 2,
-    title: "旅游英语必备词汇",
+    title: "雅思词汇",
     type: "词汇表",
-    level: "初级",
+    level: "高级",
     students: 1890,
     rating: 4.7,
-    image: "https://picsum.photos/id/28/400/225",
+    image: ysImg,
   },
   {
     id: 3,
-    title: "英语听力训练：新闻篇",
-    type: "音频",
-    level: "高级",
+    title: "高考必备词汇",
+    type: "词汇表",
+    level: "初级",
     students: 1560,
     rating: 4.9,
-    image: "https://picsum.photos/id/42/400/225",
+    image: gkImg,
   },
   {
     id: 4,
-    title: "日常英语会话800句",
-    type: "电子书",
+    title: "初中英语词汇",
+    type: "词汇表",
     level: "初级",
     students: 3200,
     rating: 4.6,
-    image: "https://picsum.photos/id/65/400/225",
+    image: czImg,
   },
 ];
 </script>
@@ -142,15 +144,12 @@ const popularResources = [
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             class="px-8 py-6 text-lg bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/30 transition-transform transform hover:-translate-y-1"
-            @click="
-              userInfoStore.hasToken
-                ? router.push('/learning')
-                : router.push('/register')
-            "
+            @click="router.push('/learning')"
           >
-            {{ userInfoStore.hasToken ? "继续学习" : "免费开始" }}
+            开始学习
             <Zap class="ml-2 h-5 w-5" />
           </Button>
+
           <Button
             class="px-8 py-6 text-lg bg-white hover:bg-muted text-primary font-semibold rounded-xl shadow-md transition-transform transform hover:-translate-y-1 border border-border"
             @click="router.push('/dictionary')"
@@ -326,7 +325,7 @@ const popularResources = [
           <Card
             v-for="resource in popularResources"
             :key="resource.id"
-            class="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group bg-white rounded-xl"
+            class="overflow-hidden py-0 gap-0 border-0 shadow-md hover:shadow-xl transition-all duration-300 group bg-white rounded-xl"
           >
             <div class="relative h-48 overflow-hidden rounded-t-xl">
               <img
@@ -345,20 +344,10 @@ const popularResources = [
             </div>
             <div class="p-5">
               <h3
-                class="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors duration-300"
+                class="text-lg text-center font-semibold line-clamp-2 group-hover:text-primary transition-colors duration-300"
               >
                 {{ resource.title }}
               </h3>
-              <div
-                class="flex justify-between items-center mt-4 text-sm text-muted-foreground"
-              >
-                <div class="flex items-center gap-1">
-                  <Users class="h-4 w-4" />{{ resource.students }}
-                </div>
-                <div class="flex items-center text-yellow-500 gap-1">
-                  <Star class="h-4 w-4 fill-current" />{{ resource.rating }}
-                </div>
-              </div>
             </div>
           </Card>
         </div>
@@ -381,28 +370,30 @@ const popularResources = [
             <p class="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               加入我们的学习社区，开始你的英语学习之旅。无论你是初学者还是高级学习者，我们都能帮助你达成目标。
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                class="px-8 py-6 text-lg bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/30 transition-transform transform hover:-translate-y-1"
-                @click="
-                  userInfoStore.hasToken
-                    ? router.push('/learning')
-                    : router.push('/register')
-                "
-              >
-                {{ userInfoStore.hasToken ? "继续学习" : "立即注册" }}
-              </Button>
-              <Button
-                class="px-8 py-6 text-lg bg-white hover:bg-muted text-primary font-semibold rounded-xl shadow-md transition-transform transform hover:-translate-y-1 border border-border"
-                @click="
-                  userInfoStore.hasToken
-                    ? router.push('/dictionary')
-                    : router.push('/login')
-                "
-              >
-                {{ userInfoStore.hasToken ? "探索词典" : "已有账号？登录" }}
-              </Button>
-            </div>
+            <ClientOnly>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  class="px-8 py-6 text-lg bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/30 transition-transform transform hover:-translate-y-1"
+                  @click="
+                    userInfoStore.hasToken
+                      ? router.push('/learning')
+                      : router.push('/login')
+                  "
+                >
+                  {{ userInfoStore.hasToken ? "继续学习" : "立即注册" }}
+                </Button>
+                <Button
+                  class="px-8 py-6 text-lg bg-white hover:bg-muted text-primary font-semibold rounded-xl shadow-md transition-transform transform hover:-translate-y-1 border border-border"
+                  @click="
+                    userInfoStore.hasToken
+                      ? router.push('/dictionary')
+                      : router.push('/login')
+                  "
+                >
+                  {{ userInfoStore.hasToken ? "探索词典" : "已有账号？登录" }}
+                </Button>
+              </div>
+            </ClientOnly>
           </div>
         </div>
       </div>

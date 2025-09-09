@@ -1,59 +1,35 @@
-<template>
-  <NavigationMenu class="">
-    <NavigationMenuList>
-      <NavigationMenuItem>
-         <NuxtLink v-slot="{ isActive, href, navigate }" to="/" custom>
-          <NavigationMenuLink
-            :active="isActive"
-            :href
-            :class="navigationMenuTriggerStyle()"
-            @click="navigate"
-          >
-            首页
-          </NavigationMenuLink>
-        </NuxtLink>
-        <!-- <NavigationMenuTrigger>Item One</NavigationMenuTrigger> -->
-      </NavigationMenuItem>
-      <NavigationMenuItem>
-        <NuxtLink v-slot="{ isActive, href, navigate }" to="/dictionary" custom>
-          <NavigationMenuLink
-            :active="isActive"
-            :href
-            :class="navigationMenuTriggerStyle()"
-            @click="navigate"
-          >
-            词典
-          </NavigationMenuLink>
-        </NuxtLink>
-      </NavigationMenuItem>
-       <NavigationMenuItem>
-        <NuxtLink v-slot="{ isActive, href, navigate }" to="/translate" custom>
-          <NavigationMenuLink
-            :active="isActive"
-            :href
-            :class="navigationMenuTriggerStyle()"
-            @click="navigate"
-          >
-            翻译
-          </NavigationMenuLink>
-        </NuxtLink>
-      </NavigationMenuItem>
-    </NavigationMenuList>
-  </NavigationMenu>
-</template>
-
 <script setup lang="ts">
-import {
-  NavigationMenu,
-  //   NavigationMenuContent,
-  // NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-//   NavigationMenuTrigger,
-  // NavigationMenuViewport,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+const route = useRoute();
+const currentPath = computed(() => route.path);
+const menu = [
+  {
+    name: "首页",
+    path: "/",
+  },
+  {
+    name: "词典",
+    path: "/dictionary",
+  },
+  {
+    name: "翻译",
+    path: "/translate",
+  },
+];
 </script>
+
+<template>
+  <header class="header-nav">
+    <div>
+      <NuxtLink
+        class="mx-4 text-neutral-500"
+        v-for="item in menu"
+        :key="item.name"
+        :to="item.path"
+        :class="item.path === currentPath ? 'text-neutral-950 font-bold' : ''"
+        >{{ item.name }}</NuxtLink
+      >
+    </div>
+  </header>
+</template>
 
 <style scoped></style>
