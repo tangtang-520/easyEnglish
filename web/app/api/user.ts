@@ -10,3 +10,4 @@ export const loginUserApi = (data: LoginRequest) => {
 export const registerUserApi = (data: RegisterRequest) => {
   return requert().post("/user/register", data);
 };
+

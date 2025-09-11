@@ -5,3 +5,8 @@ import type { SearchWordRequest } from "~/api/types";
 export const searchWordApi = (params: SearchWordRequest) => {
   return requert().get("/search/word", { params });
 };
+
+// 随机单词
+export const randomWordApi = () => {
+  return requert().get("/search/random");
+};
