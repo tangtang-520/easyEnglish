@@ -1,46 +1,56 @@
 <script setup lang="ts">
-import { ref } from "vue"
-// import { toast } from "vue-sonner" 
+import { ref, computed } from "vue";
+import { storeToRefs } from 'pinia';
+// import { toast } from "vue-sonner"
 import { randomWordApi } from "~/api";
 import { useQuery } from "@tanstack/vue-query";
+import { usewordListCacheStore } from "~/stores";
+
 
 // 学习进度
-const progress = ref(0)
+const progress = ref(0);
+const { wordListData } = storeToRefs(usewordListCacheStore()) ;
+const { setWordList } = usewordListCacheStore();
 
-const { data:wordList } = useQuery({
-  queryKey: ["randomWord"],
-  queryFn: randomWordApi,
+
+const { data: wordList, isLoading } = useQuery({
+  queryKey: ["randomWordData"],
+  queryFn: async () => {
+    try {
+      const data = await randomWordApi();
+      setWordList(data.data.wordInfo);
+      return data.data.wordInfo || [];
+    } catch (error) {
+      console.error("Error fetching random words:", error);
+      return [];
+    }
+  },
+  // 仅在没有缓存数据时才启用查询
+  enabled: !Array.isArray(wordListData.value) || wordListData.value.length === 0,  
+});
+const celebrate = ref(false);
+
+// 优先使用store缓存，如果没有则使用请求的数据
+const effectiveWordList = computed(() => {
+  if (wordListData.value) {
+    return wordListData.value;
+  }
+  return wordList.value || []
 })
 
-watch( ()=> wordList.value, () => {
-  console.log(wordList.value);
-  
-} )
+const meaning = computed(() => {
+  if(isLoading.value && !effectiveWordList.value.length) {
+    return "";
+  }
+  return effectiveWordList.value[progress.value]?.translation || "暂无释义";
+});
 
-const showMeaning = ref(true)
-const celebrate = ref(false)
-
-const meaning =  computed( ()=> {
-  return wordList.value?.data?.wordInfo?.[progress.value]?.translation || "暂无释义"
-} )
-
-const currentWord = computed( ()=> {
-  return wordList.value?.data?.wordInfo?.[progress.value]?.word  || ""
-} )
-
-
-// const checkAnswer = () => {
-//   const answer = letters.join("").toLowerCase()
-//   if (answer === currentWord.value.toLowerCase()) {
-//     toast.success("✅ 答对啦！继续加油～")
-//     celebrate.value = true
-//     progress.value = Math.min(progress.value + 10, 100)
-//     showMeaning.value = true
-//   } else {
-//     toast.error("❌ 错误，再试一次吧～")
-//   }
-// }
-
+const currentWord = computed(() => {
+  if(isLoading.value && !effectiveWordList.value.length) {
+    return "";
+  }
+  return effectiveWordList.value[progress.value]?.word || "";
+});
 </script>
 
 <template>
@@ -55,16 +65,23 @@ const currentWord = computed( ()=> {
         <CardDescription>拼出单词，完成练习</CardDescription>
 
         <div class="mt-4">
-          <Progress v-model="progress"  />
+          <Progress v-model="progress" :max="effectiveWordList.length" />
           <p class="mt-2 text-sm text-muted-foreground">
-            学习进度：{{ progress }}%
+            学习进度：{{ progress + 1 }}/{{ effectiveWordList.length }}
           </p>
         </div>
       </CardHeader>
 
+      <CardContent  class="mt-4">
+        <Alert>
+          <AlertTitle>释义</AlertTitle>
+          <AlertDescription>{{ meaning }}</AlertDescription>
+        </Alert>
+      </CardContent>
+
       <!-- 输入框下划线样式 -->
       <CardContent class="mt-6 flex justify-center">
-        <WordInput :index-error="[0,1]"   :length="currentWord.length" />
+        <WordInput :index-error="[0, 1]" :length="currentWord?.length || 0" />
       </CardContent>
 
       <!-- 提交按钮 -->
@@ -73,12 +90,7 @@ const currentWord = computed( ()=> {
       </CardContent>
 
       <!-- 单词释义 -->
-      <CardContent v-if="showMeaning" class="mt-4">
-        <Alert>
-          <AlertTitle>释义</AlertTitle>
-          <AlertDescription>{{ meaning }}</AlertDescription>
-        </Alert>
-      </CardContent>
+
 
       <!-- 答对庆祝 -->
       <CardFooter v-if="celebrate" class="justify-center">

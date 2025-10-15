@@ -29,6 +29,7 @@ const { data, refetch, isLoading } = useQuery({
   queryKey: ["searchWord"],
   queryFn: () => searchWordApi({ word: query.value }),
   enabled: false,
+  retry: false,
 });
 
 const searchWord = async () => {

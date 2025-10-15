@@ -21,7 +21,7 @@ export const useUserInfoStore = defineStore(
     function clearUserInfo() {
       userInfo.value = null;
       authToken.value = "";
-      tokenCookie.value = "";
+      tokenCookie.value = null;
       navigateTo("/login");
     }
 

@@ -8,7 +8,7 @@ import {
   Users,
   Zap,
 } from "lucide-vue-next";
-import { useUserInfoStore } from "~/stores/userInfo";
+import { useUserInfoStore } from "~/stores/modules/userInfo";
 import { useRouter } from "vue-router";
 import czImg from "~/assets/images/home/cz.png"
 import gkImg from "~/assets/images/home/gk.png"

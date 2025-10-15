@@ -1,16 +1,19 @@
 import axios from "axios";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { toast } from "vue-sonner";
+import { useLoginDialog } from "~/composables/useLoginDialog";
 
 const pendingRequests = new Map<string, AbortController>();
 const requestTimestamps = new Map<string, number>();
 const REQUEST_INTERVAL = 1000;
 
 function getRequestKey(config: InternalAxiosRequestConfig): string {
-  return `${config.method}-${config.url}-${JSON.stringify(config.params || config.data || {})}`;
+  return `${config.method}-${config.url}-${JSON.stringify(
+    config.params || config.data || {}
+  )}`;
 }
 
-export function requert(): AxiosInstance {
+export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
 
   const instance: AxiosInstance = axios.create({
@@ -19,10 +22,14 @@ export function requert(): AxiosInstance {
   });
 
   instance.interceptors.request.use((config) => {
-    const userData = JSON.parse(localStorage.getItem("userInfo") || "{}");
-    const token = userData?.authToken || '';
+    let token = "";
+    // 只在客户端访问localStorage
+    if (process.client) {
+      const userData = JSON.parse(localStorage.getItem("userInfo") || "{}");
+      token = userData?.authToken || "";
+    }
     if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
 
     const requestKey = getRequestKey(config);
@@ -44,7 +51,7 @@ export function requert(): AxiosInstance {
     // 创建新的 AbortController
     const controller = new AbortController();
     config.signal = controller.signal;
-    
+
     pendingRequests.set(requestKey, controller);
     requestTimestamps.set(requestKey, now);
 
@@ -61,6 +68,7 @@ export function requert(): AxiosInstance {
         toast.error(message || "请求失败");
         return Promise.reject(new Error(message || "请求失败"));
       }
+
       return response.data;
     },
     (error) => {
@@ -74,10 +82,20 @@ export function requert(): AxiosInstance {
         return Promise.reject(error);
       }
 
+      if (error.response?.status === 401) {
+        // 登录过期，打开提示登录弹窗
+        useLoginDialog().open();
+        return Promise.reject(error);
+      }
+
       toast.error(error.message || "请求失败");
       return Promise.reject(error);
     }
   );
 
-  return instance;
-}
+  return {
+    provide: {
+      axios: instance,
+    },
+  };
+});
